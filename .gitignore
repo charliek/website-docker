@@ -1,0 +1,6 @@
+cookbooks/
+tmp/
+.vagrant
+.kitchen/
+.kitchen.local.yml
+.librarian/

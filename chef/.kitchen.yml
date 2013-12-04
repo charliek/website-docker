@@ -1,0 +1,14 @@
+---
+driver_plugin: vagrant
+driver_config:
+  require_chef_omnibus: true
+
+platforms:
+- name: precise64
+  driver_config:
+    box: precise64
+    box_url: http://files.vagrantup.com/precise64.box
+suites:
+- name: blog-full
+  run_list:
+    - recipe[blog::default]
