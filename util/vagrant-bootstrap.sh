@@ -3,7 +3,7 @@
 set -x
 
 CHEFDIR="/opt/chef-solo" 
-CHEFSOLO="/usr/local/bin/chef-solo"
+CHEFSOLO="/usr/bin/chef-solo"
 NODEDIR="solo-nodes"
 NODE_JSON="$1"
 
@@ -17,27 +17,23 @@ if [ ! -f "$NODE_JSON" ]; then
   exit 1
 fi;
 
-if [ ! -f "/usr/bin/ruby1.9.1" ] ; then
-  # update the only the first time through
-  apt-get update
-  
-  # Install proper ruby version
-  apt-get install -y ruby1.9.1 ruby1.9.1-dev make
-  update-alternatives --set ruby /usr/bin/ruby1.9.1
-  update-alternatives --set gem /usr/bin/gem1.9.1
-fi;
-
 
 if [ ! -x ${CHEFSOLO} ]; then
+  # update the only the first time through
+  apt-get -y update
+
   # Install Chef
-  gem source --add https://rubygems.org/
-  gem install --no-rdoc --no-ri chef --version 11.8.2
+  apt-get -y install curl build-essential libxml2-dev libxslt-dev git
+  curl -L https://www.opscode.com/chef/install.sh | bash
+  echo "gem: --no-ri --no-rdoc" > ~/.gemrc
+  
+  /opt/chef/embedded/bin/gem source --add https://rubygems.org/
 
   # Install git (needed by librarian-chef)
   sudo apt-get install git -y
 
   # Setup librarian which is used to download cookbooks
-  gem install --no-rdoc --no-ri librarian-chef
+  /opt/chef/embedded/bin/gem install --no-rdoc --no-ri librarian-chef
 
   # Setup Chef Solo
   mkdir -p $CHEFDIR/cache
@@ -56,7 +52,7 @@ fi;
 
 # Pull down cookbooks
 pushd /opt/chef-solo/website/chef/
-sudo librarian-chef install --path=cookbooks
+sudo /opt/chef/embedded/bin/librarian-chef install --path=cookbooks
 popd
 
 # Execute chef
