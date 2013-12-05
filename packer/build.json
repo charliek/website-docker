@@ -1,0 +1,81 @@
+{
+  "builders": [
+    {
+      "access_key": "{{user `aws_access_key`}}",
+      "account_id": "{{user `aws_account_id`}}",
+      "ami_name": "blog-instance-{{timestamp}}",
+      "bundle_upload_command": "sudo EC2_AMITOOL_HOME=/opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9 -n /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9/bin/ec2-upload-bundle -b {{.BucketName}} -m {{.ManifestPath}} -a {{.AccessKey}} -s {{.SecretKey}} -d {{.BundleDirectory}} --batch --retry",
+      "bundle_vol_command": "sudo EC2_AMITOOL_HOME=/opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9 -n /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9/bin/ec2-bundle-vol -k {{.KeyPath}} -u {{.AccountId}} -c {{.CertPath}} -r {{.Architecture}} -e {{.PrivatePath}} -d {{.Destination}} -p {{.Prefix}} --batch",
+      "instance_type": "m1.small",
+      "region": "us-east-1",
+      "s3_bucket": "{{user `aws_s3_bucket`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "source_ami": "ami-95ac89fc",
+      "ssh_username": "ubuntu",
+      "tags": {
+        "Application": "blog",
+        "OS_Version": "Ubuntu",
+        "Release": "12.04"
+      },
+      "type": "amazon-instance",
+      "x509_cert_path": "{{user `aws_x509_cert_path`}}",
+      "x509_key_path": "{{user `aws_x509_key_path`}}",
+      "x509_upload_path": "/tmp"
+    }
+  ],
+  "provisioners": [
+    {
+      "inline": [
+        "sleep 30",
+        "sudo apt-get update"
+      ],
+      "type": "shell"
+    },
+    {
+      "inline": [
+        "sudo mkdir -p /opt/chef-solo/website",
+        "sudo chown -R ubuntu /opt/chef-solo",
+        "sudo mkdir -p /opt/dw-blog",
+        "sudo chown -R ubuntu /opt/dw-blog"
+      ],
+      "type": "shell"
+    },
+    {
+      "destination": "/opt/chef-solo/website/chef-setup.tar.gz",
+      "source": "chef-setup.tar.gz",
+      "type": "file"
+    },
+    {
+      "inline": [
+        "cd /opt/chef-solo/website",
+        "sudo tar -zxf chef-setup.tar.gz",
+        "sudo /opt/chef-solo/website/util/vagrant-bootstrap.sh /opt/chef-solo/website/chef/solo-nodes/blog-full.json"
+      ],
+      "type": "shell"
+    },
+    {
+      "inline": [
+        "sudo apt-get install -y unzip",
+        "sudo apt-get install -y build-essential",
+        "sudo mkdir -p /opt/ec2-ami-tools",
+        "sudo chown -R ubuntu /opt/ec2-ami-tools",
+        "wget -r 3 -O /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9.zip http://charliek-tools.s3.amazonaws.com/ec2-ami-tools-1.4.0.9.zip",
+        "cd /opt/ec2-ami-tools",
+        "sudo unzip ec2-ami-tools-1.4.0.9.zip",
+        "sudo rm ec2-ami-tools-1.4.0.9.zip",
+        "sudo chown -R root /opt/ec2-ami-tools"
+      ],
+      "only": ["amazon-instance"],
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "aws_access_key": "",
+    "aws_account_id": "",
+    "aws_s3_bucket": "",
+    "aws_secret_key": "",
+    "aws_x509_cert_path": "",
+    "aws_x509_key_path": ""
+  }
+}
+

@@ -1,0 +1,8 @@
+{
+  "aws_access_key": "",
+  "aws_secret_key": "",
+  "aws_account_id": "",
+  "aws_x509_cert_path": "",
+  "aws_x509_key_path": "",
+  "aws_s3_bucket": ""
+}
