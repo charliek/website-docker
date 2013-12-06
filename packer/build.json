@@ -10,12 +10,12 @@
       "region": "us-east-1",
       "s3_bucket": "{{user `aws_s3_bucket`}}",
       "secret_key": "{{user `aws_secret_key`}}",
-      "source_ami": "ami-95ac89fc",
+      "source_ami": "ami-955b79fc",
       "ssh_username": "ubuntu",
       "tags": {
         "Application": "blog",
         "OS_Version": "Ubuntu",
-        "Release": "12.04"
+        "Release": "13.04"
       },
       "type": "amazon-instance",
       "x509_cert_path": "{{user `aws_x509_cert_path`}}",
@@ -26,8 +26,7 @@
   "provisioners": [
     {
       "inline": [
-        "sleep 30",
-        "sudo apt-get update"
+        "sleep 30"
       ],
       "type": "shell"
     },
@@ -49,21 +48,23 @@
       "inline": [
         "cd /opt/chef-solo/website",
         "sudo tar -zxf chef-setup.tar.gz",
-        "sudo /opt/chef-solo/website/util/vagrant-bootstrap.sh /opt/chef-solo/website/chef/solo-nodes/blog-full.json"
+        "sudo /opt/chef-solo/website/util/vagrant-bootstrap.sh /opt/chef-solo/website/chef/solo-nodes/blog-full.json",
+        "sudo docker kill $(sudo docker ps -q)",
+        "sudo service docker stop"
       ],
       "type": "shell"
     },
     {
       "inline": [
-        "sudo apt-get install -y unzip",
-        "sudo apt-get install -y build-essential",
+        "sudo apt-get install -y ruby1.8 ruby1.8-dev make unzip build-essential rsync",
         "sudo mkdir -p /opt/ec2-ami-tools",
         "sudo chown -R ubuntu /opt/ec2-ami-tools",
         "wget -r 3 -O /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9.zip http://charliek-tools.s3.amazonaws.com/ec2-ami-tools-1.4.0.9.zip",
         "cd /opt/ec2-ami-tools",
         "sudo unzip ec2-ami-tools-1.4.0.9.zip",
         "sudo rm ec2-ami-tools-1.4.0.9.zip",
-        "sudo chown -R root /opt/ec2-ami-tools"
+        "sudo chown -R root /opt/ec2-ami-tools",
+        "sudo sync"
       ],
       "only": ["amazon-instance"],
       "type": "shell"

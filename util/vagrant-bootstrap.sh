@@ -41,7 +41,8 @@ if [ ! -x ${CHEFSOLO} ]; then
 cat > $CHEFDIR/solo.rb << EOF
 root = '$CHEFDIR/website/chef'
 file_cache_path '$CHEFDIR/cache' 
-cookbook_path [ root + '/cookbooks', root + '/site-cookbooks']
+# cookbook_path [ root + '/cookbooks', root + '/site-cookbooks']
+cookbook_path [ root + '/cookbooks']
 role_path root + '/roles'
 data_bag_path root + '/data_bags'
 EOF

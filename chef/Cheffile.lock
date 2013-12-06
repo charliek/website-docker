@@ -72,8 +72,17 @@ GIT
       modules (>= 0.0.0)
       yum (>= 0.0.0)
 
+PATH
+  remote: site-cookbooks/blog
+  specs:
+    blog (0.0.1)
+      apt (>= 0.0.0)
+      docker (>= 0.0.0)
+      nginx (>= 0.0.0)
+
 DEPENDENCIES
   apt (= 2.2.0)
+  blog (>= 0)
   database (= 1.4.0)
   docker (>= 0)
   nginx (= 2.0.4)
