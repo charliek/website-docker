@@ -4,3 +4,7 @@ tmp/
 .kitchen/
 .kitchen.local.yml
 .librarian/
+
+*.pem
+packer/env.json
+packer/chef-setup.tar.gz
