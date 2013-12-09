@@ -1,0 +1,15 @@
+{
+  "name": "data_bag_item_site_users",
+  "json_class": "Chef::DataBagItem",
+  "chef_type": "data_bag_item",
+  "data_bag": "site",
+  "raw_data": {
+    "id": "users",
+    "users": {
+      "encrypted_data": "YYRgA6MMvQUpttlpsGnKDfRrdCGsP6vfae57Fz1rd83w5tITRi4OrSRGeyK6\nxg08Mo8LwQgfg0Y7JmSC2Z9tsjUydYiYdnDGmXOVZxfnGWpwNAEYpHKr/nZ7\nm43tUwioW6Hu2QIjdT0Llw+HMVMhl6dCyPlVNXDzgT1Q2MSUv0iJu3V1q1mn\nWRTcQ//ncV6oG2ZvSGxg5orxL/WutySkbMF7mI/v6a9yF2VCnL5kHT+/9Z2p\nofS9zYQ2vPl7ymJJUuoDbje2h3vagMiNVIM/shxY+BT+z/XndOTjN6YJ5mup\nKhA2Uf4kqjpNpoaspsfR+8Gl5XTbZGg73kIG0b53rMPwtreE6Wadw5CXMdRS\nCiW1d5CL4NAzA4d2AMOMSsIsAZvmwmtgMRoBQ6Tin2HJNiNsrEGrQf/VsZYs\ngYVyHTx6D8ejM4YB3XjVH8sTjhsQ1o89Yh3uzkgHnS10eRTWIfhZqLoX6pRO\nQY5W8fz138sKzmyhkMQjV4D2GJnhnkFGU0govYDnCQqUR7ZdMGjCvetkQHL0\nJGHSNNRcM9oxRodkKLSzZO84083D9zQ/OzPCzIu0nDRKbu5HEanD0gCeuXLR\n7BTSI5pZILIwxMIzOMjCncUhmCH9DX03AGjok5tY9XQoMmgmGdIwzyf3KApQ\nCV5psLhYkaWVHqfUmclZmEvpmi2obOiv5/qn7e6Et8Xn\n",
+      "iv": "vQvSuXg0PL23QFSfWuW5Sw==\n",
+      "version": 1,
+      "cipher": "aes-256-cbc"
+    }
+  }
+}

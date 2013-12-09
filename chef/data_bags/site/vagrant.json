@@ -1,0 +1,15 @@
+{
+	"name": "data_bag_item_site_vagrant",
+	"json_class": "Chef::DataBagItem",
+	"chef_type": "data_bag_item",
+	"data_bag": "site",
+	"raw_data": {
+		"id": "vagrant",
+		"blog": {
+			"encrypted_data": "nE8oGAUgG2uMpZZ6huxuKobcykF3kMFmJpGx2M+4KEJUpm4iBcKerkmaGmyj\ntfkYuLa9pPQE4EqfR81nmwrQKWgUiPftXZRucjrax/Yg6NeBqdpEOjYAcgB9\nnmwcaaepuL4F5u2AQoYQb3x8kYPfGitkAd5ERRNqPWD4GZcC/TnydhxU8LV2\nFIfgXE8oLd871HOYTeymVKtI41aaucq6DPUTBUjPKzqxaeb4alsoLKJLRaRy\nU2qV7f7IpzQ0UJ1hmNL8H8b233/iI4Tfb87v6dGI2/iO/5BhdF8xiwXggWs=\n",
+			"iv": "U91jsYciTG92nHrYg7R6+A==\n",
+			"version": 1,
+			"cipher": "aes-256-cbc"
+		}
+	}
+}

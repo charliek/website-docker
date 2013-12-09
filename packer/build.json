@@ -5,7 +5,7 @@
       "account_id": "{{user `aws_account_id`}}",
       "ami_name": "blog-instance-{{timestamp}}",
       "bundle_upload_command": "sudo EC2_AMITOOL_HOME=/opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9 -n /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9/bin/ec2-upload-bundle -b {{.BucketName}} -m {{.ManifestPath}} -a {{.AccessKey}} -s {{.SecretKey}} -d {{.BundleDirectory}} --batch --retry",
-      "bundle_vol_command": "sudo EC2_AMITOOL_HOME=/opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9 -n /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9/bin/ec2-bundle-vol -k {{.KeyPath}} -u {{.AccountId}} -c {{.CertPath}} -r {{.Architecture}} -e {{.PrivatePath}} -d {{.Destination}} -p {{.Prefix}} --batch",
+      "bundle_vol_command": "sudo EC2_AMITOOL_HOME=/opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9 -n /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9/bin/ec2-bundle-vol -k {{.KeyPath}} -u {{.AccountId}} -c {{.CertPath}} -r {{.Architecture}} -e {{.PrivatePath}}/* -d {{.Destination}} -p {{.Prefix}} --batch --no-filter",
       "instance_type": "m1.small",
       "region": "us-east-1",
       "s3_bucket": "{{user `aws_s3_bucket`}}",
@@ -21,6 +21,37 @@
       "x509_cert_path": "{{user `aws_x509_cert_path`}}",
       "x509_key_path": "{{user `aws_x509_key_path`}}",
       "x509_upload_path": "/tmp"
+    },
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "us-west-2",
+      "source_ami": "ami-8c0663bc",
+      "instance_type": "m1.small",
+      "ssh_username": "ubuntu",
+      "ami_name": "blog-ebs-{{timestamp}}"
+    },
+    {
+      "type": "openstack",
+      "username": "{{user `rackspace_user`}}",
+      "password": "{{user `rackspace_password`}}",
+      "provider": "rackspace-us",
+      "region": "ORD",
+      "ssh_username": "root",
+      "image_name": "blog-{{timestamp}}",
+      "source_image": "80fbcb55-b206-41f9-9bc2-2dd7aac6c061",
+      "flavor": "2"
+    },
+    {
+      "type": "digitalocean",
+      "client_id": "{{user `digitalocean_client_id`}}",
+      "api_key": "{{user `digitalocean_api_key`}}",
+      "image_id": 350076,
+      "region_id": 4,
+      "size_id": 66,
+      "droplet_name": "blog-{{timestamp}}",
+      "snapshot_name": "blog-image-{{timestamp}}"
     }
   ],
   "provisioners": [
@@ -31,26 +62,25 @@
       "type": "shell"
     },
     {
-      "inline": [
-        "sudo mkdir -p /opt/chef-solo/website",
-        "sudo chown -R ubuntu /opt/chef-solo",
-        "sudo mkdir -p /opt/dw-blog",
-        "sudo chown -R ubuntu /opt/dw-blog"
-      ],
-      "type": "shell"
-    },
-    {
-      "destination": "/opt/chef-solo/website/chef-setup.tar.gz",
+      "destination": "/tmp/chef-setup.tar.gz",
       "source": "chef-setup.tar.gz",
       "type": "file"
     },
     {
+      "destination": "/tmp/encrypted_data_bag_secret",
+      "source": "{{user `chef_key_location`}}",
+      "type": "file"
+    },
+    {
       "inline": [
+        "sudo mkdir -p /opt/chef-solo/website",
         "cd /opt/chef-solo/website",
-        "sudo tar -zxf chef-setup.tar.gz",
-        "sudo /opt/chef-solo/website/util/vagrant-bootstrap.sh /opt/chef-solo/website/chef/solo-nodes/blog-full.json",
-        "sudo docker kill $(sudo docker ps -q)",
-        "sudo service docker stop"
+        "sudo tar -zxf /tmp/chef-setup.tar.gz -C /opt/chef-solo/website",
+        "sudo rm /tmp/chef-setup.tar.gz",
+        "sudo /opt/chef-solo/website/util/vagrant-bootstrap.sh /opt/chef-solo/website/chef/solo-nodes/blog-prod.json",
+        "sudo docker stop $(sudo docker ps -q)",
+        "sudo service docker stop",
+        "rm /tmp/encrypted_data_bag_secret"
       ],
       "type": "shell"
     },
@@ -71,12 +101,20 @@
     }
   ],
   "variables": {
+    "chef_key_location": "",
+
     "aws_access_key": "",
     "aws_account_id": "",
     "aws_s3_bucket": "",
     "aws_secret_key": "",
     "aws_x509_cert_path": "",
-    "aws_x509_key_path": ""
+    "aws_x509_key_path": "",
+
+    "rackspace_user": "",
+    "rackspace_password": "",
+
+    "digitalocean_client_id": "",
+    "digitalocean_api_key": ""
   }
 }
 

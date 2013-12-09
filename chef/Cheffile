@@ -6,12 +6,18 @@ site 'http://community.opscode.com/api/v1'
 # The apt 2.3.0 cookbook is giving me errors so just moving back to 2.2.0 for now
 cookbook "apt", "2.2.0"
 
-cookbook "database", "1.4.0"
-cookbook "postgres", "1.0.1"
-cookbook "nginx", "2.0.4"
-cookbook "docker",
-  :git => "https://github.com/bflad/chef-docker.git",
-  :ref => "0.19.0"
+# cookbook "database", "1.4.0"
+# cookbook "postgres", "1.0.1"
+# cookbook "nginx", "2.0.4"
+# cookbook "docker",
+#   :git => "https://github.com/bflad/chef-docker.git",
+#   :ref => "0.19.0"
+
+cookbook "user",
+	:git => "https://github.com/fnichol/chef-user.git"
 
 cookbook "blog",
   :path => "site-cookbooks/blog"
+
+cookbook "docker",
+  :path => "site-cookbooks/docker"

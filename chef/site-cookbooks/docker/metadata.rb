@@ -1,4 +1,4 @@
-name              "blog"
+name              "docker"
 maintainer        "Charlie Knudsen"
 maintainer_email  "charlie.knudsen@gmail.com"
 license           "Apache 2.0"
@@ -10,6 +10,6 @@ version           "0.0.1"
   supports os
 end
 
-%w{ docker apt user }.each do |cb|
+%w{ apt }.each do |cb|
   depends cb
 end

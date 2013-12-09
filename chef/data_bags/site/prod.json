@@ -1,0 +1,15 @@
+{
+  "name": "data_bag_item_site_prod",
+  "json_class": "Chef::DataBagItem",
+  "chef_type": "data_bag_item",
+  "data_bag": "site",
+  "raw_data": {
+    "id": "prod",
+    "blog": {
+      "encrypted_data": "qBiLcWtUddhdMfyWjtS0XQ/hXgSMED949cThSMaUb+CKGGkqRi7orlJCaxKi\nKwpf19fwTtjybMRE9UFsc3yQ0Fsc1ihcvChjVXIvHscvqEPs1JnZ5JpgHC6P\nqeXH9TNuCSNkDVXgPV4vrlDK4ihbE0XMo7EWAxF7KeULBvx4Fukxg1GyfbWK\nFeYsqy/J0cuH/jmgi+denW0YIO6u5T2VSQ2yyQ+yo8V5d/cj2R+y5vqRNO5h\nJn8XbJyQ5sUy2mIg93F6LBACALines4/N9ezsV/nYTn7sTrVqDlYuamzlzlS\nB7uOhPaWCopP813EA8zKQ0Aw2mazqg64HpgqpI7CBA==\n",
+      "iv": "b/DT55FNyOp8M5ztqUfEQA==\n",
+      "version": 1,
+      "cipher": "aes-256-cbc"
+    }
+  }
+}

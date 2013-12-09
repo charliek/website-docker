@@ -1,11 +1,6 @@
-docker_image "charliek/blog-service" do
-	cmd_timeout 600
-end
-
-docker_container "blog-service" do
-  image "charliek/blog-service"
-  detach true
-  port ['5678:5678', '5679:5679']  
-  env "DW_DB_URL=jdbc:mysql://192.168.70.1:3306/blog"
+docker_service "blog-service" do
+  container_name "charliek/blog-service"
+  port ['5678:5678', '5679:5679']
+  env "DW_DB_URL=#{node['blog']['db']['url']}"
   not_if {File.exists?("/var/run/blog-service.cid")}
 end

@@ -1,0 +1,8 @@
+{
+	"blog": {
+		"environment": "prod"
+	},
+	"run_list": [
+		"recipe[blog]"
+	]
+}

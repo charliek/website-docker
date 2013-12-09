@@ -1,0 +1,50 @@
+description "Docker service for <%= @service_name %>"
+author "Docker Chef Cookbook"
+
+start on filesystem and started docker
+stop on runlevel [!2345]
+
+# Due to a bug in upstart we need to set the modes we consider
+# successful exists https://bugs.launchpad.net/upstart/+bug/568288
+normal exit 0 CONT
+
+respawn
+
+env CID_FILE=/var/run/<%= @service_name %>.cid
+
+script
+  docker_run() {
+    echo "Starting <%= @service_name %> with docker run"
+    docker run -cidfile $CID_FILE -a stdout -a stderr <%= @service_params %> <%= @container_name %>
+  }
+
+  docker_start() {
+    echo "Starting <%= @service_name %> with docker start"
+    docker start -a `cat $CID_FILE`
+  }
+
+  FILE=/var/run/docker.sock
+
+  # Wait for docker to finish starting up
+  while [ ! -e $FILE ] ; do
+    inotifywait -t 2 -e create $(dirname $FILE)
+  done
+
+  if [ ! -f $CID_FILE ] ; then
+    docker_run
+  else
+    CID=`cat $CID_FILE`
+    if [ ${#CID} -gt 10 ] ; then
+      docker_start
+    else
+      rm $CID_FILE
+      docker_run
+    fi
+  fi
+end script
+
+pre-stop script
+  echo "Stopping <%= @service_name %>"
+  /usr/bin/docker stop -t <%= @cmd_timeout %> `cat $CID_FILE`
+end script
+

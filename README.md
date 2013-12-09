@@ -17,6 +17,8 @@ bundle exec foodcritic -f all site-cookbooks/
 
 Kitchen Tests:
 
+These are still broken. Working on those still.
+
 ```bash
 cd chef
 bundle install

@@ -6,5 +6,6 @@ tmp/
 .librarian/
 
 *.pem
+*.key
 packer/env.json
 packer/chef-setup.tar.gz

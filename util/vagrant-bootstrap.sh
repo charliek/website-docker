@@ -4,6 +4,7 @@ set -x
 
 CHEFDIR="/opt/chef-solo" 
 CHEFSOLO="/usr/bin/chef-solo"
+CHEF_KEY="/tmp/encrypted_data_bag_secret"
 NODEDIR="solo-nodes"
 NODE_JSON="$1"
 
@@ -17,8 +18,16 @@ if [ ! -f "$NODE_JSON" ]; then
   exit 1
 fi;
 
+if [ -f '/vagrant/website_docker.key'] ; then
+  cp /vagrant/website_docker.key $CHEF_KEY
+fi
 
-if [ ! -x ${CHEFSOLO} ]; then
+if [ ! -f $CHEF_KEY] ; then
+   echo "Unable to find the key used for encrypted databags at: '${CHEF_KEY}'"
+   exit 3
+fi
+
+if [ ! -f $CHEFDIR/solo.rb ]; then
   # update the only the first time through
   apt-get -y update
 
@@ -41,10 +50,11 @@ if [ ! -x ${CHEFSOLO} ]; then
 cat > $CHEFDIR/solo.rb << EOF
 root = '$CHEFDIR/website/chef'
 file_cache_path '$CHEFDIR/cache' 
-# cookbook_path [ root + '/cookbooks', root + '/site-cookbooks']
 cookbook_path [ root + '/cookbooks']
 role_path root + '/roles'
 data_bag_path root + '/data_bags'
+encrypted_data_bag_secret "/tmp/encrypted_data_bag_secret"
+log_level :info
 EOF
 
   chown root:root $CHEFDIR/solo.rb

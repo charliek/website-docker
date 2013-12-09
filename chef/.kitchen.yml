@@ -6,13 +6,14 @@ provisioner:
   name: chef_solo
 
 platforms:
-- name: precise64
+- name: raring64
   driver_config:
     require_chef_omnibus: true
-    box: precise64
-    box_url: http://files.vagrantup.com/precise64.box
+    box: raring64
+    box_url: http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box
 
 suites:
 - name: blog-full
   run_list:
     - recipe[blog::default]
+  attributes: {blog: { encrypted: false, create_users: false } }

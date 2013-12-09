@@ -1,11 +1,6 @@
-docker_image "charliek/grails-blog" do
-	cmd_timeout 600
-end
-
-docker_container "grails_blog" do
-  image "charliek/grails-blog"
-  detach true
+docker_service "grails-blog" do
+  container_name "charliek/grails-blog"
   port '8080:8080'
-  env ["SETTINGS_FLAVOR=local", "GITHUB_CLIENT_ID=xxxxx", "GITHUB_SECRET=xxxx", "CLIENT_PREFIX=http://172.17.42.1:5678"]
+  env ["GITHUB_CLIENT_ID=#{node['blog']['github']['client_id']}", "GITHUB_SECRET=#{node['blog']['github']['secret']}", "CLIENT_PREFIX=#{node['blog']['client']['prefix']}"]
   not_if {File.exists?("/var/run/grails-blog.cid")}
 end
