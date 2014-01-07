@@ -16,6 +16,7 @@ action :create do
     group 'root'
     cookbook 'docker'
     variables(
+      :setup_partial => new_resource.setup_partial,
       :cmd_timeout => new_resource.cmd_timeout,
       :service_name => service_name,
       :container_name => container_name,

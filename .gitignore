@@ -9,3 +9,4 @@ tmp/
 *.key
 packer/env.json
 packer/chef-setup.tar.gz
+scratch.txt

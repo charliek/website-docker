@@ -13,6 +13,12 @@ respawn
 env CID_FILE=/var/run/<%= @service_name %>.cid
 
 script
+  <% if (@setup_partial != nil) then %>
+  # ----- user defined template -----
+  <%= render @setup_partial %>
+  # ---------------------------------
+  <% end %>
+
   docker_run() {
     echo "Starting <%= @service_name %> with docker run"
     docker run -cidfile $CID_FILE -a stdout -a stderr <%= @service_params %> <%= @container_name %>

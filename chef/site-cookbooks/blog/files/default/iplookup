@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Lookup the ip address assigned to the passed in interface
+default_interface='eth0 '
+INTERFACE=${1:-$default_interface}
+HOST_IP=`/sbin/ifconfig | /bin/grep -A 1 $INTERFACE | /usr/bin/tail -1 | /usr/bin/cut -d ':' -f 2 | /usr/bin/cut -d ' ' -f 1`
+echo $HOST_IP
