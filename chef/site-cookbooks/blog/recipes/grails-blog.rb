@@ -1,13 +1,25 @@
-docker_service "grails-blog" do
-  container_name "charliek/grails-blog"
-  port '8080:8080'
-  setup_partial "host_setup.erb"
-  env [
-  	"GITHUB_CLIENT_ID=#{node['blog']['github']['client_id']}",
-  	"GITHUB_SECRET=#{node['blog']['github']['secret']}",
-  	"CLIENT_PREFIX=#{node['blog']['client']['prefix']}",
-  	"ETCD_URL=#{node['blog']['etcd']['url']}",
-  	"HOST_IP=$HOST_IP"
-  ]
-  not_if {File.exists?("/var/run/grails-blog.cid")}
+include_recipe "blog::jetty"
+
+directory '/opt/grails-blog' do
+  mode "0775"
+  recursive true
+  action :create
+end
+
+remote_file "/opt/grails-blog/blog-#{node['blog']['grails']['version']}.war" do 
+  action :create
+  source "https://s3-us-west-2.amazonaws.com/charliek-apps/grails-blog/blog-#{node['blog']['grails']['version']}.war"
+  mode 0644
+end
+
+template "/etc/init/grails-blog.conf" do
+  source "grails-blog.conf.erb"
+  mode "0644"
+  action :create
+end
+
+service "grails-blog" do
+  provider Chef::Provider::Service::Upstart
+  supports :restart => true, :start => true, :stop => true, :reload => false
+  action [ :enable, :start]
 end

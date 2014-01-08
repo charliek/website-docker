@@ -18,11 +18,11 @@ if [ ! -f "$NODE_JSON" ]; then
   exit 1
 fi;
 
-if [ -f '/vagrant/website_docker.key'] ; then
+if [ -f '/vagrant/website_docker.key' ] ; then
   cp /vagrant/website_docker.key $CHEF_KEY
 fi
 
-if [ ! -f $CHEF_KEY] ; then
+if [ ! -f $CHEF_KEY ] ; then
    echo "Unable to find the key used for encrypted databags at: '${CHEF_KEY}'"
    exit 3
 fi
@@ -59,6 +59,15 @@ EOF
 
   chown root:root $CHEFDIR/solo.rb
   chmod 644 $CHEFDIR/solo.rb
+fi;
+
+# Remove chef client service so it does not run unless told
+if [ -f '/var/run/chef/client.pid' ] ; then
+  service chef-client stop
+fi;
+
+if [ -f '/etc/init.d/chef-client' ] ; then
+  rm /etc/init.d/chef-client
 fi;
 
 # Pull down cookbooks

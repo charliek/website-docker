@@ -3,4 +3,4 @@
 set -x
 
 . build_tar.sh
-packer build -var-file="$HOME/.packer/env.json" -only=amazon-ebs build.json
+packer build -var-file="$HOME/.packer/env.json" -only=amazon-instance build.json

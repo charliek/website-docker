@@ -21,7 +21,8 @@ cookbook_file "iplookup" do
   action :create_if_missing
 end
 
-include_recipe "docker"
+package "openjdk-7-jre-headless"
+
 include_recipe "blog::blog-service"
 include_recipe "blog::grails-blog"
 

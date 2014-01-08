@@ -1,0 +1,23 @@
+description "Blog front end"
+author "Chef"
+
+start on (filesystem and net-device-up)
+stop on runlevel [!2345]
+
+respawn
+respawn limit 5 30
+
+script
+  export GITHUB_CLIENT_ID="<%= node['blog']['github']['client_id'] %>"
+  export GITHUB_SECRET="<%= node['blog']['github']['secret'] %>"
+  export CLIENT_PREFIX="<%= node['blog']['client']['prefix'] %>"
+  export ETCD_URL="<%= node['blog']['etcd']['url'] %>"
+  export HOST_IP=`/usr/bin/iplookup 'eth0 '`
+
+  export GC_OPTS="-XX:+UseParallelOldGC"
+  export JAVA_OPTS="-server -Xms256M -Xmx512M"
+  export JETTY_JAR="<%= node['jetty']['path'] %>"
+  export APP_WAR="/opt/grails-blog/blog-<%= node['blog']['grails']['version'] %>.war"
+
+  /usr/bin/java $JAVA_OPTS $GC_OPTS -jar $JETTY_JAR $APP_WAR
+end script

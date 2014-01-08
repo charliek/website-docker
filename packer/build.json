@@ -7,16 +7,12 @@
       "bundle_upload_command": "sudo EC2_AMITOOL_HOME=/opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9 -n /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9/bin/ec2-upload-bundle -b {{.BucketName}} -m {{.ManifestPath}} -a {{.AccessKey}} -s {{.SecretKey}} -d {{.BundleDirectory}} --batch --retry",
       "bundle_vol_command": "sudo EC2_AMITOOL_HOME=/opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9 -n /opt/ec2-ami-tools/ec2-ami-tools-1.4.0.9/bin/ec2-bundle-vol -k {{.KeyPath}} -u {{.AccountId}} -c {{.CertPath}} -r {{.Architecture}} -e {{.PrivatePath}}/* -d {{.Destination}} -p {{.Prefix}} --batch --no-filter",
       "instance_type": "m1.small",
-      "region": "us-east-1",
+      "region": "us-west-2",
       "s3_bucket": "{{user `aws_s3_bucket`}}",
       "secret_key": "{{user `aws_secret_key`}}",
-      "source_ami": "ami-955b79fc",
+      "ssh_timeout": "5m",
+      "source_ami": "ami-34177304",
       "ssh_username": "ubuntu",
-      "tags": {
-        "Application": "blog",
-        "OS_Version": "Ubuntu",
-        "Release": "13.04"
-      },
       "type": "amazon-instance",
       "x509_cert_path": "{{user `aws_x509_cert_path`}}",
       "x509_key_path": "{{user `aws_x509_key_path`}}",
@@ -73,19 +69,21 @@
     },
     {
       "inline": [
+        "set -x",
         "sudo mkdir -p /opt/chef-solo/website",
         "cd /opt/chef-solo/website",
         "sudo tar -zxf /tmp/chef-setup.tar.gz -C /opt/chef-solo/website",
         "sudo rm /tmp/chef-setup.tar.gz",
         "sudo /opt/chef-solo/website/util/vagrant-bootstrap.sh /opt/chef-solo/website/chef/solo-nodes/blog-prod.json",
-        "sudo docker stop $(sudo docker ps -q)",
-        "sudo service docker stop",
-        "rm /tmp/encrypted_data_bag_secret"
+        "rm /tmp/encrypted_data_bag_secret",
+        "sudo service grails-blog stop",
+        "sudo service blog-service stop"
       ],
       "type": "shell"
     },
     {
       "inline": [
+        "set -x",
         "sudo apt-get install -y ruby1.8 ruby1.8-dev make unzip build-essential rsync",
         "sudo mkdir -p /opt/ec2-ami-tools",
         "sudo chown -R ubuntu /opt/ec2-ami-tools",
