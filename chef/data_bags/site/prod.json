@@ -5,9 +5,15 @@
   "data_bag": "site",
   "raw_data": {
     "id": "prod",
+    "aws": {
+      "encrypted_data": "rIAIHmczSjCr1Pc5RO6rtYmYeKOwOQlNm4cEeGDIlBCM08qBUf1XEuZn5hqO\nU989vcJ6dz6kWn7hhrHZjI0m/gUATmwRWG1ZK9oQ/8UGK6Ic+CYddrh96ZTI\nII/n5czlzD6LVvN2MTrLsoWdOY3XktMRW0L3MF+Z0Fq0vtTVWng=\n",
+      "iv": "Xd/R4NMOKe5Z6yQfHOlhAg==\n",
+      "version": 1,
+      "cipher": "aes-256-cbc"
+    },
     "blog": {
-      "encrypted_data": "YgXvFe3R4HhD1Iqlckk4eA1hcBuLVxrn7crFrKHNCIYvQUCIrNdVCFjqUpG/\nunytdh0bEYXYCObk5ldS6UTT+4T8h6peIvp2q27OES6ZHEYS23pGCTIB+Cc8\nwo2NVqdRO2UZREx6Y8h9j23dYZ0UynVFTbPOMiFhUayE6H5vzApdmitRslSy\nwYDpdcl9FPfxz8ShU+r47ZiA5ootlhR2oKGp80kAVpq7DfW+sXibiEyWZEi+\nTC27QFC4pv9pVNteB0U4FJoD6SpvcnTJBXU+8QpxUY/E7h4oh8oGzK+5Mio5\n9+24odwHEAwplEgoWehMorHUNWBaUS44Wu/iBndrMAjnqSIaQZvIiSiOKuwh\nJKdWBWBsoGV8KZkmL3cUZmDZ8H4Ydd38iFnsC1qMInUi0g==\n",
-      "iv": "ya1XueO0BpVHfm2X0yaOow==\n",
+      "encrypted_data": "NLne/JsqA8nfAPp4LOjCDmm/C1gmMLpebo8fZdHBfKKPvP8YpSfWyM2zVF+6\n8ROCzyt2WV9nxMP5mg3pBmWuzcmy40SQIkgk0qWljNF51aBkRYYd6uEs2mRi\n9R/XTAPQVJY3MQ058yAma47Bdv1f/pj5ZBJgyhI+X5NXXZJMfdgBTULBWLFw\n4SowhSNYL2orwmuyXu3uXGysxDjMeQmjRyLliwZYwv1KxaJRHC5pdi6DR2IU\nJ0iWJXrOZ2c1hiusmwj4hkhFjdtPzK23UZKezqsrDehCQYRFAWCtMAf9zqmN\nW25Zg7sRwySWqEelx1KS7UtddklW1I0/NgY+PZcINijxW1y/vETqsFqQIGWG\nqg0LqOygbYK4Yu0qgRt2Pe19U11lbA28tGJKXR0AqWQhVw==\n",
+      "iv": "3vaR9N0HmjCHocbHiEyMtg==\n",
       "version": 1,
       "cipher": "aes-256-cbc"
     }

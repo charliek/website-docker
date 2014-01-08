@@ -1,6 +1,4 @@
-include_recipe "docker"
-
-# Encrypt only the things that need to be encrypted and use attributes for everything else
+# move encrypted values in the environment into attribute space
 if node['blog']['encrypted']
 	db_values = Chef::EncryptedDataBagItem.load("site", node['blog']['environment'])
 	node.set['blog']['etcd']['url'] = db_values['blog']['etcd']['url']
@@ -8,6 +6,11 @@ if node['blog']['encrypted']
 	node.set['blog']['github']['secret'] = db_values['blog']['github']['secret']
 	node.set['blog']['github']['client_id']	= db_values['blog']['github']['client_id']
 	node.set['blog']['client']['prefix'] = db_values['blog']['client']['prefix'] 
+end
+
+# setup users so we can login if something after fails.
+if node['blog']['create_users']
+	include_recipe "blog::users"
 end
 
 cookbook_file "iplookup" do
@@ -18,9 +21,7 @@ cookbook_file "iplookup" do
   action :create_if_missing
 end
 
+include_recipe "docker"
 include_recipe "blog::blog-service"
 include_recipe "blog::grails-blog"
 
-if node['blog']['create_users']
-	include_recipe "blog::users"
-end
