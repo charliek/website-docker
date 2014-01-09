@@ -23,7 +23,7 @@ template "/etc/init/blog-service.conf" do
 end
 
 service "blog-service" do
-    provider Chef::Provider::Service::Upstart
-    supports :restart => true, :start => true, :stop => true, :reload => false
-    action [ :enable, :start]
+  provider Chef::Provider::Service::Upstart
+  supports :restart => true, :start => true, :stop => true, :reload => false
+  action [ :enable, :start]
 end

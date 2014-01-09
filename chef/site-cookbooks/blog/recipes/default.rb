@@ -12,7 +12,7 @@ end
 
 # setup users so we can login if something after fails.
 if node['blog']['create_users']
-	include_recipe "blog::users"
+  include_recipe "blog::users"
 end
 
 cookbook_file "iplookup" do
