@@ -19,5 +19,5 @@ cookbook "user",
 cookbook "blog",
   :path => "site-cookbooks/blog"
 
-cookbook "docker",
-  :path => "site-cookbooks/docker"
+# cookbook "docker",
+#   :path => "site-cookbooks/docker"

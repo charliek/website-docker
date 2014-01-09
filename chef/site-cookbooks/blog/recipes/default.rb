@@ -1,3 +1,5 @@
+include_recipe "apt"
+
 # move encrypted values in the environment into attribute space
 if node['blog']['encrypted']
 	db_values = Chef::EncryptedDataBagItem.load("site", node['blog']['environment'])

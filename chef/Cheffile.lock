@@ -2,22 +2,6 @@ SITE
   remote: http://community.opscode.com/api/v1
   specs:
     apt (2.2.0)
-    bluepill (2.3.0)
-      rsyslog (>= 0.0.0)
-    build-essential (1.4.2)
-    nginx (2.0.4)
-      apt (~> 2.2)
-      bluepill (~> 2.3)
-      build-essential (~> 1.4)
-      ohai (~> 1.1)
-      runit (~> 1.2)
-      yum (~> 2.3)
-    ohai (1.1.12)
-    rsyslog (1.9.0)
-    runit (1.4.0)
-      build-essential (>= 0.0.0)
-      yum (>= 0.0.0)
-    yum (2.4.4)
 
 GIT
   remote: https://github.com/fnichol/chef-user.git
@@ -31,18 +15,10 @@ PATH
   specs:
     blog (0.0.1)
       apt (>= 0.0.0)
-      docker (>= 0.0.0)
-      nginx (>= 0.0.0)
-
-PATH
-  remote: site-cookbooks/docker
-  specs:
-    docker (0.0.1)
-      apt (>= 0.0.0)
+      user (>= 0.0.0)
 
 DEPENDENCIES
   apt (= 2.2.0)
   blog (>= 0)
-  docker (>= 0)
   user (>= 0)
 

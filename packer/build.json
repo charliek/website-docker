@@ -24,6 +24,7 @@
       "secret_key": "{{user `aws_secret_key`}}",
       "region": "us-west-2",
       "source_ami": "ami-8c0663bc",
+      "ssh_timeout": "5m",
       "instance_type": "m1.small",
       "ssh_username": "ubuntu",
       "ami_name": "blog-ebs-{{timestamp}}"

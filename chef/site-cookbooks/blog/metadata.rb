@@ -10,6 +10,6 @@ version           "0.0.1"
   supports os
 end
 
-%w{ docker apt user }.each do |cb|
+%w{ apt user }.each do |cb|
   depends cb
 end

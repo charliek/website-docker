@@ -1,23 +1,18 @@
 #!/usr/bin/env bats
 
-@test "blog_service should be running in docker" {
-	run sudo docker ps
-	[[ "$output" == *"charliek/blog-service:latest"* ]]
+@test "open jdk 7 is installed" {
+	run /usr/bin/java -version
+	[[ "$output" == *"OpenJDK Runtime Environment"* ]]
+	[[ "$output" == *"1.7.0"* ]]
 }
 
-@test "blog_service service responding" {
-	run curl -I http://localhost:5679/ping
-	[ "$status" -eq 0 ]
-	[[ "$output" == *"HTTP/1.1 200 OK"* ]]
+@test "grails-blog upstart should be in place" {
+	run cat /etc/init/grails-blog.conf
+    [[ "$output" == *"/opt/jetty-runner/jetty-runner-9.1.0.jar"* ]]
 }
 
-@test "grails_blog should be running in docker" {
-	run sudo docker ps
-	[[ "$output" == *"charliek/grails-blog:latest"* ]]
+@test "blog-service upstart should be in place" {
+	run cat /etc/init/blog-service.conf
+	[[ "$output" == *"/opt/blog-service/blog-service-"* ]]
 }
 
-@test "grails_blog service responding" {
-	run curl -I http://localhost:8080
-	[ "$status" -eq 0 ]
-	[[ "$output" == *"HTTP/1.1 200 OK"* ]]
-}

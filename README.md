@@ -17,8 +17,6 @@ bundle exec foodcritic -f all site-cookbooks/
 
 Kitchen Tests:
 
-These are still broken. Working on those still.
-
 ```bash
 cd chef
 bundle install
@@ -27,15 +25,15 @@ bundle install
 bundle exec kitchen list
 
 # Login to one of the boxes that has been converged. Used for manual testing.
-kitchen login default-ubuntu-1204
+kitchen login blog-full-raring64
 
 # Run chef and get a VM setup. Note that this will not tear down the VM
 # and should be used for development.
-bundle exec kitchen converge [blog-full-precise64]
+bundle exec kitchen converge [blog-full-raring64]
 
 # Run the tests for in the kitchen. Note that this will not tear down the VM
 # and should be used for development.
-bundle exec kitchen verify [blog-full-precise64]
+bundle exec kitchen verify [blog-full-raring64]
 
 # Destroy test instances that may be hanging around from the above commands
 bundle exec kitchen destroy

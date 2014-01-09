@@ -2,6 +2,10 @@ GEM
   remote: https://rubygems.org/
   specs:
     archive-tar-minitar (0.5.2)
+    busser (0.6.0)
+      thor
+    busser-bats (0.1.0)
+      busser
     chef (11.8.2)
       chef-zero (~> 1.6, >= 1.6.2)
       diff-lcs (~> 1.2, >= 1.2.4)
@@ -43,8 +47,8 @@ GEM
     highline (1.6.20)
     ipaddress (0.8.0)
     json (1.7.7)
-    kitchen-vagrant (0.12.0)
-      test-kitchen (~> 1.0.0.rc)
+    kitchen-vagrant (0.14.0)
+      test-kitchen (~> 1.0)
     librarian (0.1.1)
       highline
       thor (~> 0.15)
@@ -93,7 +97,7 @@ GEM
     safe_yaml (0.9.7)
     slop (3.4.7)
     systemu (2.5.2)
-    test-kitchen (1.0.0)
+    test-kitchen (1.1.1)
       mixlib-shellout (~> 1.2)
       net-scp (~> 1.1)
       net-ssh (~> 2.7)
@@ -109,7 +113,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  foodcritic (>= 3.0.3)
-  kitchen-vagrant (>= 0.12.0)
+  busser-bats (~> 0.1.0)
+  foodcritic (~> 3.0.3)
+  kitchen-vagrant (~> 0.14.0)
   librarian-chef (>= 0.0.2)
-  test-kitchen (>= 1.0.0)
+  test-kitchen (~> 1.1.1)
