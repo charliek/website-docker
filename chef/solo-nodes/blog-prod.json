@@ -3,6 +3,6 @@
 		"environment": "prod"
 	},
 	"run_list": [
-		"recipe[blog]"
+		"role[etcd]", "role[nginx]", "role[blog-application]"
 	]
 }

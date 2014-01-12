@@ -1,0 +1,19 @@
+server {
+  listen 443 ssl spdy;
+  
+  ssl on;
+  ssl_certificate <%= node['nginx']['key']['directory'] %>/ssl-bundle.crt;
+  ssl_certificate_key <%= node['nginx']['key']['directory'] %>/server.key;
+
+  spdy_headers_comp 7;
+
+  server_name           <%= node['nginx']['host'] %>;
+  access_log            /var/log/nginx/<%= node['nginx']['host'] %>.access.log;
+
+  location / {
+    proxy_pass          http://localhost:8080;
+    proxy_read_timeout  5;
+    proxy_redirect      http://localhost:8080 $scheme://<%= node['nginx']['host'] %>;
+  }
+}
+

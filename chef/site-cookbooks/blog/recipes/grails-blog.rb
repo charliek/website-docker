@@ -16,6 +16,7 @@ template "/etc/init/grails-blog.conf" do
   source "grails-blog.conf.erb"
   mode "0644"
   action :create
+  notifies :restart, "service[grails-blog]"
 end
 
 service "grails-blog" do

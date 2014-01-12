@@ -1,0 +1,17 @@
+{
+  "name": "nginx",
+  
+  "chef_type": "role",
+
+  "json_class": "Chef::Role",
+
+  "description": "Setup nginx now with spdy support",
+  
+  "default_attributes": {
+
+  },
+  
+  "run_list": [
+    "role[base]", "recipe[blog::nginx]"
+  ]
+}

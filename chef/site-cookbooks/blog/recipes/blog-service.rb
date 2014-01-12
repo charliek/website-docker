@@ -20,6 +20,7 @@ template "/etc/init/blog-service.conf" do
   source "blog-service.conf.erb"
   mode "0644"
   action :create
+  notifies :restart, "service[blog-service]"
 end
 
 service "blog-service" do

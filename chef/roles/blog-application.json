@@ -1,0 +1,13 @@
+{
+  "name": "blog-application",
+  
+  "chef_type": "role",
+
+  "json_class": "Chef::Role",
+
+  "description": "Install the blog application. Grails app and service",
+   
+  "run_list": [
+    "role[base]", "recipe[blog::blog-service]", "recipe[blog::grails-blog]", "recipe[blog::migrate]"
+  ]
+}
