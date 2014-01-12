@@ -12,11 +12,10 @@ template "/etc/rsyslog.conf" do
   notifies :restart, "service[rsyslog]"    
 end
 
-if node['papertrail']['enabled']
-  template "/etc/rsyslog.d/papertrail.conf" do
-    source "papertrail.conf.erb"
-    mode "0644"
-    action :create
-	notifies :restart, "service[rsyslog]"    
-  end
+template "/etc/rsyslog.d/papertrail.conf" do
+  source "papertrail.conf.erb"
+  mode "0644"
+  action :create
+  notifies :restart, "service[rsyslog]"
+  only_if { node['papertrail']['enabled'] }
 end
