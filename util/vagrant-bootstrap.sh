@@ -55,6 +55,7 @@ role_path root + '/roles'
 data_bag_path root + '/data_bags'
 encrypted_data_bag_secret "/tmp/encrypted_data_bag_secret"
 log_level :info
+log_location '/var/log/chef-solo.log'
 EOF
 
   chown root:root $CHEFDIR/solo.rb
