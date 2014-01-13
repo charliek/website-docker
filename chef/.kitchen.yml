@@ -6,14 +6,16 @@ provisioner:
   name: chef_solo
 
 platforms:
-- name: raring64
+- name: ubuntu-13.04
   driver_config:
     require_chef_omnibus: true
-    box: raring64
-    box_url: http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box
+    memory: 1700
 
 suites:
 - name: blog-full
   run_list:
-    - recipe[blog::default]
-  attributes: {blog: { encrypted: false, create_users: false } }
+    - role[etcd]
+    - role[nginx]
+    - role[database]
+    - role[blog-application]
+  attributes: {blog: { encrypted: false, create_users: false }, nginx: { ssl: false } }

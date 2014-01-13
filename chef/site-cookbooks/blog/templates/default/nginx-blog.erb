@@ -1,4 +1,6 @@
 server {
+  
+<% if node['nginx']['ssl'] %>
   listen 443 ssl spdy;
   
   ssl on;
@@ -6,6 +8,9 @@ server {
   ssl_certificate_key <%= node['nginx']['key']['directory'] %>/server.key;
 
   spdy_headers_comp 7;
+<% else %>
+  listen         80;
+<% end %>
 
   server_name           <%= node['nginx']['host'] %>;
   access_log            /var/log/nginx/<%= node['nginx']['host'] %>.access.log;

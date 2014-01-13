@@ -2,10 +2,10 @@ default['blog']['create_users'] = true
 default['blog']['environment'] = 'vagrant'
 default['blog']['encrypted'] = true
 
-# defaults that general work for a vagrant develop environment
+# defaults that general work for kitchen tests
 default['blog']['db']['name'] = 'blog'
 default['blog']['db']['host'] = '127.0.0.1'
-default['blog']['db']['url'] = "jdbc:mysql://127.0.0.1:3306/blog"
+default['blog']['db']['url'] = "jdbc:postgresql://127.0.0.1:5432/blog"
 default['blog']['db']['user'] = "blog"
 default['blog']['db']['password'] = "blog"
 default['blog']['db']['migrate'] = true
@@ -30,6 +30,7 @@ default['papertrail']['enabled'] = false
 default['papertrail']['events'] = '*.*'
 default['papertrail']['host'] = ''
 
+default['nginx']['ssl'] = true
 default['nginx']['key']['directory'] = "/etc/nginx/keys"
 default['nginx']['host'] = "blog-vagrant.charlieknudsen.com"
 

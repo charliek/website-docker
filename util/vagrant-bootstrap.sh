@@ -42,7 +42,7 @@ if [ ! -f $CHEFDIR/solo.rb ]; then
   sudo apt-get install git -y
 
   # Setup librarian which is used to download cookbooks
-  /opt/chef/embedded/bin/gem install --no-rdoc --no-ri librarian-chef
+  /opt/chef/embedded/bin/gem install librarian-chef
 
   # Setup Chef Solo
   mkdir -p $CHEFDIR/cache
@@ -55,7 +55,6 @@ role_path root + '/roles'
 data_bag_path root + '/data_bags'
 encrypted_data_bag_secret "/tmp/encrypted_data_bag_secret"
 log_level :info
-log_location '/var/log/chef-solo.log'
 EOF
 
   chown root:root $CHEFDIR/solo.rb
