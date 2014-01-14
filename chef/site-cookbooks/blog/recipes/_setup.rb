@@ -22,3 +22,4 @@ end
 
 package "openjdk-7-jre-headless"
 package "htop"
+package "unzip"

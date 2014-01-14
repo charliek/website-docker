@@ -17,5 +17,5 @@ script
   export APP_OPTS="-Ddw.database.url=$DW_DB_URL -Ddw.etcd.hosts=$ETCD_URL -Ddw.etcd.publish.hostName=$HOST_IP"
   export APP_JAR="/opt/blog-service/blog-service-<%= node['blog']['service']['version'] %>-shadow.jar"
 
-  /usr/bin/java $JAVA_OPTS $GC_OPTS $APP_OPTS -jar $APP_JAR server /opt/blog-service/config.yml
+  /usr/bin/java $JAVA_OPTS $GC_OPTS $APP_OPTS -jar $APP_JAR server /opt/blog-service/prod_config.yml
 end script

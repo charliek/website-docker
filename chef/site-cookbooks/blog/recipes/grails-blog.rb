@@ -6,6 +6,7 @@ directory '/opt/grails-blog' do
   action :create
 end
 
+# TODO only run this if the md5 file shows a download is needed
 remote_file "/opt/grails-blog/blog-#{node['blog']['grails']['version']}.war" do 
   action :create
   source "https://s3-us-west-2.amazonaws.com/charliek-apps/grails-blog/blog-#{node['blog']['grails']['version']}.war"
