@@ -4,7 +4,7 @@ include_recipe "database::postgresql"
 postgresql_connection_info = {
   :host     => node['blog']['db']['host'],
   :port     => node['postgresql']['config']['port'],
-  :username => 'postgres',
+  :username => node['postgresql']['root']['user'],
   :password => node['postgresql']['password']['postgres']
 }
 

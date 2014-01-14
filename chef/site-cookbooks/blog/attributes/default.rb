@@ -34,6 +34,9 @@ default['nginx']['ssl'] = true
 default['nginx']['key']['directory'] = "/etc/nginx/keys"
 default['nginx']['host'] = "blog-vagrant.charlieknudsen.com"
 
+default['postgresql']['root']['user'] = 'postgres'
+default['postgresql']['password']['postgres'] = 'password1'
+
 # nginx certs must be set in encrypted databag
 default['nginx']['key']['server'] = ""
 default['nginx']['key']['ssl-bundle'] = ""
