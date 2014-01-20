@@ -9,13 +9,14 @@ remote_file "/opt/blog-service/blog-service-#{node['blog']['service']['version']
   action :create
   source "https://s3-us-west-2.amazonaws.com/charliek-apps/blog-service/blog-service-#{node['blog']['service']['version']}-shadow.jar"
   mode 0644
+  # notifies :run, "execute[blog-service-config]", :immediately
 end
 
+# TODO figure out how to only run this if a new file has been downloaded
 execute "blog-service-config" do
-  command "unzip -u -j /opt/blog-service/blog-service-#{node['blog']['service']['version']}-shadow.jar prod_config.yml -d /opt/blog-service/"
-  creates "/opt/blog-service/prod_config.yml"
+  command "unzip -u -o /opt/blog-service/blog-service-#{node['blog']['service']['version']}-shadow.jar prod_config.yml -d /opt/blog-service/"
   notifies :restart, "service[blog-service]"
-  action :run
+  # action :nothing
 end
 
 template "/etc/init/blog-service.conf" do
