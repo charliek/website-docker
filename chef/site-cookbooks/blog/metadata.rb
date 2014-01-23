@@ -10,6 +10,6 @@ version           "0.0.1"
   supports os
 end
 
-%w{ apt user etcd postgresql database}.each do |cb|
+%w{ apt user etcd postgresql database golang}.each do |cb|
   depends cb
 end

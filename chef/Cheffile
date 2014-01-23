@@ -8,7 +8,7 @@ cookbook "apt", "2.3.4"
 cookbook "etcd", "1.3.5"
 cookbook "postgresql", "3.3.4"
 
-# cookbook "nginx", "2.0.4"
+cookbook "golang"
 
 cookbook "database", "1.6.0"
 
