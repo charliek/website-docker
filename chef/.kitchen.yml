@@ -6,7 +6,7 @@ provisioner:
   name: chef_solo
 
 platforms:
-- name: ubuntu-13.04
+- name: ubuntu-12.04
   driver_config:
     require_chef_omnibus: true
     memory: 1700
