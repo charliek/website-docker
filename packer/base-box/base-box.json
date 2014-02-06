@@ -43,6 +43,13 @@
 
     {
       "type": "shell",
+      "inline": [
+        "sudo chmod a+x /opt/provision/*.*"
+      ]
+    },
+
+    {
+      "type": "shell",
       "script": "../common/ami-tools.sh",
       "only": ["amazon-instance"]
     }
