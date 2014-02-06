@@ -1,0 +1,54 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+
+	"Resources": {
+
+		"dbSg": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "blog database group",
+				"SecurityGroupIngress": [{
+						"IpProtocol": "tcp",
+						"FromPort": "22",
+						"ToPort": "22",
+						"CidrIp": "0.0.0.0/0"
+					},
+
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "5432",
+						"ToPort": "5432",
+						"CidrIp": "0.0.0.0/0"
+					}
+				]
+			}
+		},
+
+		"dbMaster": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"ImageId": "ami-8e90f3be",
+				"InstanceType": "m1.small",
+				"EbsOptimized": "false",
+				"KeyName": "charliek-work",
+				"Monitoring": "false",
+
+				"SecurityGroups": [{
+					"Ref": "dbSg"
+				}],
+				
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": ["", [
+							"#!/bin/bash -x\n",
+							"chmod a+x /opt/provision/*.*\n",
+							"export CHEF_ENV=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-db.json\"\n",
+							"/opt/provision/ami-bootstrap.sh\n"
+						]]
+					}
+				}
+			}
+		}
+	}
+}

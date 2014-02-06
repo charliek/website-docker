@@ -1,0 +1,167 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+
+	"Resources": {
+
+		"blogElb": {
+			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+			"Properties": {
+				"AvailabilityZones": [
+					"us-west-2a",
+					"us-west-2b"
+				],
+				"HealthCheck": {
+					"HealthyThreshold": "7",
+					"Interval": "6",
+					"Target": "HTTPS:443/about/index",
+					"Timeout": "3",
+					"UnhealthyThreshold": "3"
+				},
+				"Listeners": [{
+					"InstancePort": "80",
+					"LoadBalancerPort": "80",
+					"Protocol": "HTTP",
+					"InstanceProtocol": "HTTP"
+				}, {
+					"InstancePort": "443",
+					"LoadBalancerPort": "443",
+					"Protocol": "TCP",
+					"InstanceProtocol": "TCP"
+				}]
+			}
+		},
+
+		"blogAsg": {
+			"Type": "AWS::AutoScaling::AutoScalingGroup",
+			"Properties": {
+				"AvailabilityZones": [
+					"us-west-2b",
+					"us-west-2a"
+				],
+				"Tags": [{
+					"Key": "grails-blog",
+					"Value": "0.0.1",
+					"PropagateAtLaunch": "true"
+				}],
+
+				"Cooldown": "10",
+				"DesiredCapacity": "2",
+				"MaxSize": "3",
+				"MinSize": "2",
+				"HealthCheckGracePeriod": "600",
+				"HealthCheckType": "ELB",
+				"LaunchConfigurationName": {
+					"Ref": "blogLaunchconfig"
+				},
+				"LoadBalancerNames": [{
+					"Ref": "blogElb"
+				}]
+			}
+		},
+
+		"blogLaunchconfig": {
+			"Type": "AWS::AutoScaling::LaunchConfiguration",
+			"Properties": {
+				"ImageId": "ami-8e90f3be",
+				"InstanceType": "m1.small",
+				"EbsOptimized": "false",
+				"KeyName": "charliek-work",
+				"InstanceMonitoring": "false",
+				"SecurityGroups": [{
+					"Ref": "blogSg"
+				}],
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": ["", [
+							"#!/bin/bash -x\n",
+							"chmod a+x /opt/provision/*.*\n",
+							"export CHEF_ENV=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-grails.json\"\n",
+							"/opt/provision/ami-bootstrap.sh\n"
+						]]
+					}
+				}
+			}
+		},
+
+		"blogSg": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "blog project",
+				"SecurityGroupIngress": [{
+						"IpProtocol": "tcp",
+						"FromPort": "22",
+						"ToPort": "22",
+						"CidrIp": "0.0.0.0/0"
+					},
+
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "80",
+						"ToPort": "80",
+						"CidrIp": "0.0.0.0/0"
+					},
+
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "443",
+						"ToPort": "443",
+						"CidrIp": "0.0.0.0/0"
+					}
+				]
+			}
+		},
+
+		"dbSg": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "blog database group",
+				"SecurityGroupIngress": [
+
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "22",
+						"ToPort": "22",
+						"CidrIp": "0.0.0.0/0"
+					},
+
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "5432",
+						"ToPort": "5432",
+						"SourceSecurityGroupId": {
+							"Ref": "blogSg"
+						}
+					}
+				]
+			}
+		},
+
+		"dbMaster": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"ImageId": "ami-8e90f3be",
+				"InstanceType": "m1.small",
+				"EbsOptimized": "false",
+				"KeyName": "charliek-work",
+				"Monitoring": "false",
+
+				"SecurityGroups": [{
+					"Ref": "dbSg"
+				}],
+				
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": ["", [
+							"#!/bin/bash -x\n",
+							"chmod a+x /opt/provision/*.*\n",
+							"export CHEF_ENV=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-db.json\"\n",
+							"/opt/provision/ami-bootstrap.sh\n"
+						]]
+					}
+				}
+			}
+		}
+	}
+}
