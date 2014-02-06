@@ -36,3 +36,4 @@ fi;
 
 # setup  provision directory for init helpers
 sudo mkdir -p /opt/provision
+sudo chmod 777 /opt/provision

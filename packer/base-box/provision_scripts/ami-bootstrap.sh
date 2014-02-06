@@ -2,7 +2,7 @@ set -x
 
 CHEFDIR="/opt/chef-solo"
 CHEFSOLO="/usr/bin/chef-solo"
-CHEF_KEY="/tmp/encrypted_data_bag_secret"
+CHEF_KEY="/opt/provision/encrypted_data_bag_secret"
 CHEFDIR="/opt/chef-solo"
 
 if [ ! -d $CHEFDIR/website ]; then
