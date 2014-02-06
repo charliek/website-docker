@@ -1,0 +1,8 @@
+{
+	"blog": {
+		"environment": "vagrant"
+	},
+	"run_list": [
+		"role[database]"
+	]
+}
