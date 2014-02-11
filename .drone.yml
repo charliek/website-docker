@@ -1,0 +1,9 @@
+image: bradrydzewski/ruby:1.9.3
+script:
+  - cd chef
+  - bundle install
+  - bundle exec foodcritic -f all site-cookbooks/
+notify:
+  email:
+    recipients:
+      - charlie.knudsen@gmail.com
