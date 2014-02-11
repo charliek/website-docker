@@ -2,7 +2,7 @@
 	"AWSTemplateFormatVersion": "2010-09-09",
 
 	"Resources": {
-
+ 
 		"blogElb": {
 			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
 			"Properties": {
@@ -45,9 +45,9 @@
 				}],
 
 				"Cooldown": "10",
-				"DesiredCapacity": "2",
-				"MaxSize": "3",
-				"MinSize": "2",
+				"DesiredCapacity": "1",
+				"MinSize": "1",
+				"MaxSize": "1",
 				"HealthCheckGracePeriod": "600",
 				"HealthCheckType": "ELB",
 				"LaunchConfigurationName": {
@@ -75,8 +75,8 @@
 						"Fn::Join": ["", [
 							"#!/bin/bash -x\n",
 							"chmod a+x /opt/provision/*.*\n",
-							"export CHEF_ENV=\"qa1\"\n",
-							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-grails.json\"\n",
+							"export STACK=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-cf-grails.json\"\n",
 							"/opt/provision/ami-bootstrap.sh\n"
 						]]
 					}
@@ -112,6 +112,127 @@
 			}
 		},
 
+		"serviceAsg": {
+			"Type": "AWS::AutoScaling::AutoScalingGroup",
+			"Properties": {
+				"AvailabilityZones": [
+					"us-west-2b",
+					"us-west-2a"
+				],
+				"Tags": [{
+					"Key": "blog-service",
+					"Value": "0.0.1",
+					"PropagateAtLaunch": "true"
+				}],
+
+				"Cooldown": "10",
+				"DesiredCapacity": "1",
+				"MinSize": "1",
+				"MaxSize": "1",
+				"HealthCheckGracePeriod": "600",
+				"HealthCheckType": "ELB",
+				"LaunchConfigurationName": {
+					"Ref": "serviceLaunchconfig"
+				},
+				"LoadBalancerNames": [{
+					"Ref": "serviceElb"
+				}]
+			}
+		},
+
+		"serviceLaunchconfig": {
+			"Type": "AWS::AutoScaling::LaunchConfiguration",
+			"Properties": {
+				"ImageId": "ami-8e90f3be",
+				"InstanceType": "m1.small",
+				"EbsOptimized": "false",
+				"KeyName": "charliek-work",
+				"InstanceMonitoring": "false",
+				"SecurityGroups": [{
+					"Ref": "serviceSg"
+				}],
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": ["", [
+							"#!/bin/bash -x\n",
+							"chmod a+x /opt/provision/*.*\n",
+							"export STACK=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-cf-dw.json\"\n",
+							"/opt/provision/ami-bootstrap.sh\n"
+						]]
+					}
+				}
+			}
+		},
+
+		"serviceDns": {
+			"Type": "AWS::Route53::RecordSet",
+			"Properties": {
+				"HostedZoneName": "littledemo.com.",
+				"Comment": "DNS name for database master",
+				"Name": {
+					"Fn::Join": ["", [{
+						"Ref": "AWS::StackName"
+					}, "-service.littledemo.com."
+					]]
+				},
+				"Type": "CNAME",
+				"TTL": "900",
+				"ResourceRecords": [{
+					"Fn::GetAtt": ["serviceElb", "DNSName"]
+				}]
+			}
+		},
+
+		"serviceElb": {
+			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+			"Properties": {
+				"AvailabilityZones": [
+					"us-west-2a",
+					"us-west-2b"
+				],
+				"HealthCheck": {
+					"HealthyThreshold": "7",
+					"Interval": "6",
+					"Target": "HTTP:5679/healthcheck",
+					"Timeout": "3",
+					"UnhealthyThreshold": "3"
+				},
+				"Listeners": [{
+					"InstancePort": "5678",
+					"LoadBalancerPort": "5678",
+					"Protocol": "HTTP",
+					"InstanceProtocol": "HTTP"
+				}]
+			}
+		},
+
+		"serviceSg": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "blog services",
+				"SecurityGroupIngress": [{
+						"IpProtocol": "tcp",
+						"FromPort": "22",
+						"ToPort": "22",
+						"CidrIp": "0.0.0.0/0"
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "5678",
+						"ToPort": "5678",
+						"CidrIp": "0.0.0.0/0"
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "5679",
+						"ToPort": "5679",
+						"CidrIp": "0.0.0.0/0"
+					}
+				]
+			}
+		},
+
 		"dbSg": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
@@ -129,11 +250,30 @@
 						"IpProtocol": "tcp",
 						"FromPort": "5432",
 						"ToPort": "5432",
-						"SourceSecurityGroupId": {
+						"SourceSecurityGroupName": {
 							"Ref": "blogSg"
 						}
 					}
 				]
+			}
+		},
+
+		"dbMasterDns": {
+			"Type": "AWS::Route53::RecordSet",
+			"Properties": {
+				"HostedZoneName": "littledemo.com.",
+				"Comment": "DNS name for database master",
+				"Name": {
+					"Fn::Join": ["", [{
+						"Ref": "AWS::StackName"
+					}, "-dbmaster.littledemo.com."
+					]]
+				},
+				"Type": "CNAME",
+				"TTL": "900",
+				"ResourceRecords": [{
+					"Fn::GetAtt": ["dbMaster", "PublicIp"]
+				}]
 			}
 		},
 
@@ -155,8 +295,8 @@
 						"Fn::Join": ["", [
 							"#!/bin/bash -x\n",
 							"chmod a+x /opt/provision/*.*\n",
-							"export CHEF_ENV=\"qa1\"\n",
-							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-db.json\"\n",
+							"export STACK=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-cf-db.json\"\n",
 							"/opt/provision/ami-bootstrap.sh\n"
 						]]
 					}

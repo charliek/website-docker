@@ -1,8 +1,0 @@
-{
-	"blog": {
-		"environment": "vagrant"
-	},
-	"run_list": [
-		"role[nginx]", "role[blog-application]"
-	]
-}

@@ -1,17 +1,23 @@
 #!/usr/bin/env python
 import json
 import sys
+import os
+import codecs
 
-if len(sys.argv) != 3:
-    sys.exit('Usage: %s [solo node] [environment]' % sys.argv[0])
+if len(sys.argv) != 4:
+    sys.exit('Usage: %s [environment] [in file] [out file]' % sys.argv[0])
 
-solo_file = sys.argv[1]
-solo_env = sys.argv[2]
+solo_env = sys.argv[1]
+in_file = sys.argv[2]
+out_file = sys.argv[3]
 
 solo_json = None
-with open(solo_file, 'r') as fp:
-    solo_json = json.load(fp)
-    solo_json['blog']['environment'] = solo_env
+with codecs.open(in_file, 'r', 'utf-8') as fp:
+    solo_json = fp.read()
 
-with open(solo_file, 'w') as fp:
-	json.dump(solo_json, fp, indent=2)
+    # Replace the environment variable placeholders
+    for k, v in os.environ.items():
+    	solo_json = solo_json.replace("${"+k+"}", v)
+
+with codecs.open(out_file, 'w', 'utf-8') as fp:
+	fp.write(solo_json)

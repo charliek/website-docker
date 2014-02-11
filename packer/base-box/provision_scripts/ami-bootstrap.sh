@@ -10,7 +10,7 @@ if [ ! -d $CHEFDIR/website ]; then
     sudo git clone https://github.com/charliek/website-docker.git website
 fi
 
-/opt/provision/node_env.py $SOLO_NODE $CHEF_ENV
+/opt/provision/node_env.py $STACK /opt/chef-solo/website/chef/environments/template.aws.json /opt/chef-solo/website/chef/environments/aws.json
 
 if [ ! -f $CHEFDIR/solo.rb ]; then
     cat > $CHEFDIR/solo.rb <<EOF
@@ -19,6 +19,7 @@ file_cache_path '$CHEFDIR/cache'
 cookbook_path [ root + '/cookbooks']
 role_path root + '/roles'
 data_bag_path root + '/data_bags'
+environment_path root + '/environments'
 encrypted_data_bag_secret "/opt/provision/encrypted_data_bag_secret"
 log_level :info
 log_location '/var/log/chef-solo.log'
@@ -43,7 +44,7 @@ popd
 
 # Execute chef
 if [ -x ${CHEFSOLO} ]; then
-   ${CHEFSOLO} -c ${CHEFDIR}/solo.rb -j "$SOLO_NODE"
+   ${CHEFSOLO} -E aws -c ${CHEFDIR}/solo.rb -j "$SOLO_NODE"
    chefrtn=$?
    echo "Chef Solo run completed with status code '${chefrtn}'"
    exit ${chefrtn}

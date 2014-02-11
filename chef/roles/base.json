@@ -1,13 +1,13 @@
 {
-  "name": "base",
-  
-  "chef_type": "role",
+	"name": "base",
 
-  "json_class": "Chef::Role",
+	"chef_type": "role",
 
-  "description": "Base role used for all setups",
-   
-  "run_list": [
-    "recipe[blog::_setup]", "recipe[blog::papertrail]"
-  ]
+	"json_class": "Chef::Role",
+
+	"description": "Base role used for all setups",
+
+	"run_list": [
+		"recipe[blog::_setup]", "recipe[blog::papertrail]"
+	]
 }

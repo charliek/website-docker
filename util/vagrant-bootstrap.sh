@@ -53,6 +53,7 @@ file_cache_path '$CHEFDIR/cache'
 cookbook_path [ root + '/cookbooks']
 role_path root + '/roles'
 data_bag_path root + '/data_bags'
+environment_path root + '/environments'
 encrypted_data_bag_secret "/tmp/encrypted_data_bag_secret"
 log_level :info
 EOF
@@ -77,7 +78,7 @@ popd
 
 # Execute chef
 if [ -x ${CHEFSOLO} ]; then
-   ${CHEFSOLO} -c ${CHEFDIR}/solo.rb -j "$NODE_JSON"
+   ${CHEFSOLO} -E vagrant -c ${CHEFDIR}/solo.rb -j "$NODE_JSON"
    chefrtn=$?
    echo "Chef Solo run completed with status code '${chefrtn}'"
    exit ${chefrtn}

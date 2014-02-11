@@ -24,6 +24,25 @@
 			}
 		},
 
+		"dbMasterDns": {
+			"Type": "AWS::Route53::RecordSet",
+			"Properties": {
+				"HostedZoneName": "littledemo.com.",
+				"Comment": "DNS name for database master",
+				"Name": {
+					"Fn::Join": ["", [{
+						"Ref": "AWS::StackName"
+					}, "-dbmaster.littledemo.com."
+					]]
+				},
+				"Type": "CNAME",
+				"TTL": "900",
+				"ResourceRecords": [{
+					"Fn::GetAtt": ["dbMaster", "PublicIp"]
+				}]
+			}
+		},
+
 		"dbMaster": {
 			"Type": "AWS::EC2::Instance",
 			"Properties": {
@@ -36,7 +55,7 @@
 				"SecurityGroups": [{
 					"Ref": "dbSg"
 				}],
-				
+
 				"UserData": {
 					"Fn::Base64": {
 						"Fn::Join": ["", [

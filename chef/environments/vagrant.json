@@ -1,0 +1,28 @@
+{
+  "name": "vagrant",
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "description": "vagrant configuration overrides",
+
+  "default_attributes": {
+    
+    "blog": {
+      "environment": "vagrant",
+      "etcd": {
+        "url": "http://10.0.2.15:4001"
+      },
+      "db": {
+        "url": "jdbc:postgresql://127.0.0.1:5432/blog",
+        "host": "127.0.0.1"
+      },
+      "client": {
+        "prefix": "http://127.0.0.1:5678"
+      }
+    },
+
+    "nginx": {
+      "host": "blog-vagrant.charlieknudsen.com"
+    }
+  }
+  
+}
