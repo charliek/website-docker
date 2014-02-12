@@ -17,9 +17,6 @@
 		  ],
 		  "config": {
 			  "listen_addresses": "*"
-		  },
-		  "password": {
-			  "postgres": "password1"
 		  }
 	  }
   },
