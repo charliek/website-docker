@@ -44,6 +44,7 @@ popd
 
 # Execute chef
 if [ -x ${CHEFSOLO} ]; then
+   # sudo chef-solo -E aws -c /opt/chef-solo/solo.rb -j /opt/chef-solo/website/chef/solo-nodes/blog-cf-db.json
    ${CHEFSOLO} -E aws -c ${CHEFDIR}/solo.rb -j "$SOLO_NODE"
    chefrtn=$?
    echo "Chef Solo run completed with status code '${chefrtn}'"

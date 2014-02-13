@@ -19,4 +19,6 @@ postgresql_database_user node['blog']['db']['user'] do
   database_name 'blog'
   privileges    [:all]
   action        :create
+  retries 10     # retry the migrations 20 times
+  retry_delay 30 # wait 1 minute between the trys
 end

@@ -35,8 +35,8 @@
 					}, "-dbmaster.littledemo.com."
 					]]
 				},
-				"Type": "CNAME",
-				"TTL": "900",
+				"Type": "A",
+				"TTL": "60",
 				"ResourceRecords": [{
 					"Fn::GetAtt": ["dbMaster", "PublicIp"]
 				}]
@@ -46,7 +46,7 @@
 		"dbMaster": {
 			"Type": "AWS::EC2::Instance",
 			"Properties": {
-				"ImageId": "ami-8e90f3be",
+				"ImageId": "ami-484d2f78",
 				"InstanceType": "m1.small",
 				"EbsOptimized": "false",
 				"KeyName": "charliek-work",
@@ -61,8 +61,8 @@
 						"Fn::Join": ["", [
 							"#!/bin/bash -x\n",
 							"chmod a+x /opt/provision/*.*\n",
-							"export CHEF_ENV=\"qa1\"\n",
-							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-db.json\"\n",
+							"export STACK=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-cf-db.json\"\n",
 							"/opt/provision/ami-bootstrap.sh\n"
 						]]
 					}
