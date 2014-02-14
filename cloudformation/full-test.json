@@ -62,7 +62,7 @@
 		"blogLaunchconfig": {
 			"Type": "AWS::AutoScaling::LaunchConfiguration",
 			"Properties": {
-				"ImageId": "ami-8e90f3be",
+				"ImageId": "ami-484d2f78",
 				"InstanceType": "m1.small",
 				"EbsOptimized": "false",
 				"KeyName": "charliek-work",
@@ -143,7 +143,7 @@
 		"serviceLaunchconfig": {
 			"Type": "AWS::AutoScaling::LaunchConfiguration",
 			"Properties": {
-				"ImageId": "ami-8e90f3be",
+				"ImageId": "ami-484d2f78",
 				"InstanceType": "m1.small",
 				"EbsOptimized": "false",
 				"KeyName": "charliek-work",
@@ -177,7 +177,7 @@
 					]]
 				},
 				"Type": "CNAME",
-				"TTL": "900",
+				"TTL": "60",
 				"ResourceRecords": [{
 					"Fn::GetAtt": ["serviceElb", "DNSName"]
 				}]
@@ -238,24 +238,41 @@
 			"Properties": {
 				"GroupDescription": "blog database group",
 				"SecurityGroupIngress": [
-
 					{
 						"IpProtocol": "tcp",
 						"FromPort": "22",
 						"ToPort": "22",
 						"CidrIp": "0.0.0.0/0"
 					},
-
 					{
 						"IpProtocol": "tcp",
 						"FromPort": "5432",
 						"ToPort": "5432",
 						"SourceSecurityGroupName": {
-							"Ref": "blogSg"
+							"Ref": "serviceSg"
 						}
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "5432",
+						"ToPort": "5432",
+						"CidrIp": "67.137.177.90/32"
 					}
 				]
 			}
+		},
+
+		"dbSgIngress": {
+		        "Type": "AWS::EC2::SecurityGroupIngress",
+		         "Properties": {
+		                "GroupName": { "Ref": "dbSg" },
+		                "IpProtocol": "tcp",
+		                "FromPort": "5432",
+		                "ToPort": "5432",
+						"SourceSecurityGroupName": {
+							"Ref": "dbSg"
+						}
+		          }
 		},
 
 		"dbMasterDns": {
@@ -269,10 +286,10 @@
 					}, "-dbmaster.littledemo.com."
 					]]
 				},
-				"Type": "CNAME",
-				"TTL": "900",
+				"Type": "A",
+				"TTL": "60",
 				"ResourceRecords": [{
-					"Fn::GetAtt": ["dbMaster", "PublicIp"]
+					"Fn::GetAtt": ["dbMaster", "PrivateIp"]
 				}]
 			}
 		},
@@ -280,7 +297,7 @@
 		"dbMaster": {
 			"Type": "AWS::EC2::Instance",
 			"Properties": {
-				"ImageId": "ami-8e90f3be",
+				"ImageId": "ami-484d2f78",
 				"InstanceType": "m1.small",
 				"EbsOptimized": "false",
 				"KeyName": "charliek-work",
@@ -289,7 +306,7 @@
 				"SecurityGroups": [{
 					"Ref": "dbSg"
 				}],
-				
+
 				"UserData": {
 					"Fn::Base64": {
 						"Fn::Join": ["", [
