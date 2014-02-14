@@ -1,0 +1,10 @@
+{
+	"etcd": {
+      "version": "0.3.0",
+      "sha256": "18be476ba59db42c573ee23fbe00f4a205830ac54f752c0d46280707603c9192"
+    },
+
+	"run_list": [
+		"recipe[etcd::binary_install]"
+	]
+}
