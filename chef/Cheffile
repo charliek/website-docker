@@ -3,9 +3,10 @@
 
 site 'http://community.opscode.com/api/v1'
 
-# The apt 2.3.0 cookbook is giving me errors so just moving back to 2.2.0 for now
 cookbook "apt", "2.3.4"
-cookbook "etcd", "1.3.5"
+cookbook "etcd",
+	:git => "https://github.com/charliek/etcd-cookbook.git"
+
 cookbook "postgresql", "3.3.4"
 
 cookbook "golang"
