@@ -51,6 +51,11 @@
 			"Description": "Second AZ to use for PublicSubnet2/PrivateSubnet2.",
 			"Type": "String",
 			"Default": "us-west-2b"
+		},
+		"AppBaseAMI": {
+			"Description": "Name of the application base AMI",
+			"Type": "String",
+			"Default": "ami-84d7b7b4"
 		}
 	},
 
@@ -337,7 +342,149 @@
 					"CidrIp": "0.0.0.0/0"
 				}]
 			}
+		},
+
+		"blogELBSg": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "blog elb security group",
+				"VpcId": { "Ref": "VPC" },
+				"SecurityGroupIngress": [
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "80",
+						"ToPort": "80",
+						"CidrIp": "0.0.0.0/0"
+					},
+
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "443",
+						"ToPort": "443",
+						"CidrIp": "0.0.0.0/0"
+					}
+				]
+			}
+		},
+
+		"blogSg": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "blog project",
+				"VpcId": { "Ref": "VPC" },
+				"SecurityGroupIngress": [{
+						"IpProtocol": "tcp",
+						"FromPort": "22",
+						"ToPort": "22",
+						"CidrIp": "0.0.0.0/0"
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "80",
+						"ToPort": "80",
+						"SourceSecurityGroupId": {
+							"Ref": "blogELBSg"
+						}
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "443",
+						"ToPort": "443",
+						"SourceSecurityGroupId": {
+							"Ref": "blogELBSg"
+						}
+					}
+				]
+			}
+		},
+
+		"blogElb": {
+			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+			"Properties": {
+				"Subnets": [
+					{ "Ref": "PriSubnet1" },
+					{ "Ref": "PriSubnet2" }
+				],
+				"SecurityGroups": [{
+					"Ref": "blogELBSg"
+				}],
+				"HealthCheck": {
+					"HealthyThreshold": "7",
+					"Interval": "6",
+					"Target": "HTTPS:443/about/index",
+					"Timeout": "3",
+					"UnhealthyThreshold": "3"
+				},
+				"Listeners": [{
+					"InstancePort": "80",
+					"LoadBalancerPort": "80",
+					"Protocol": "HTTP",
+					"InstanceProtocol": "HTTP"
+				}, {
+					"InstancePort": "443",
+					"LoadBalancerPort": "443",
+					"Protocol": "TCP",
+					"InstanceProtocol": "TCP"
+				}]
+			}
+		},
+
+		"blogAsg": {
+			"Type": "AWS::AutoScaling::AutoScalingGroup",
+			"Properties": {
+				"AvailabilityZones": [
+					{ "Ref": "AvailabilityZone1" },
+					{ "Ref": "AvailabilityZone2" }
+				],
+				"VPCZoneIdentifier": [
+					{ "Ref": "PriSubnet1" },
+					{ "Ref": "PriSubnet2" }
+				],
+				"Tags": [{
+					"Key": "grails-blog",
+					"Value": "0.0.1",
+					"PropagateAtLaunch": "true"
+				}],
+
+				"Cooldown": "10",
+				"DesiredCapacity": "1",
+				"MinSize": "1",
+				"MaxSize": "1",
+				"HealthCheckGracePeriod": "600",
+				"HealthCheckType": "ELB",
+				"LaunchConfigurationName": {
+					"Ref": "blogLaunchconfig"
+				},
+				"LoadBalancerNames": [{ "Ref": "blogElb" }]
+			}
+		},
+
+		"blogLaunchconfig": {
+			"Type": "AWS::AutoScaling::LaunchConfiguration",
+			"Properties": {
+				"AssociatePublicIpAddress": "true",
+				"ImageId": { "Ref": "AppBaseAMI" },
+				"InstanceType": "m1.small",
+				"EbsOptimized": "false",
+				"KeyName": { "Ref": "KeyName" },
+				"InstanceMonitoring": "false",
+				"SecurityGroups": [{
+					"Ref": "blogSg"
+				}],
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": ["", [
+							"#!/bin/bash -x\n",
+							"chmod a+x /opt/provision/*.*\n",
+							"export STACK=\"qa1\"\n",
+							"export SOLO_NODE=\"/opt/chef-solo/website/chef/solo-nodes/blog-cf-grails.json\"\n",
+							"/opt/provision/ami-bootstrap.sh\n"
+						]]
+					}
+				}
+			}
 		}
+
 	},
 
 	"Outputs" : {
