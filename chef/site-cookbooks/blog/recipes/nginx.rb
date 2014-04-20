@@ -1,12 +1,12 @@
 include_recipe "blog::_setup"
 include_recipe "apt"
 
-apt_repository "nginx-devel" do
-  uri "http://ppa.launchpad.net/chris-lea/nginx-devel/ubuntu"
+apt_repository "nginx-development" do
+  uri "http://ppa.launchpad.net/nginx/development/ubuntu"
   distribution node['lsb']['codename']
   components ["main"]
   keyserver "keyserver.ubuntu.com"
-  key "C7917B12"
+  key "C300EE8C"
   action :add
 end
 

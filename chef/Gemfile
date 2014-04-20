@@ -4,7 +4,7 @@ gem "librarian-chef", ">= 0.0.2"
 
 group :integration do
   gem "foodcritic", "~> 3.0.3"
-  gem "test-kitchen", "~> 1.1.1"
+  gem "test-kitchen", "~> 1.2.1"
   gem "kitchen-vagrant", "~> 0.14.0"
-  gem "busser-bats", "~> 0.1.0"
+  gem "busser-bats", "~> 0.2.0"
 end

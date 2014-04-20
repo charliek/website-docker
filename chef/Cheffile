@@ -3,18 +3,10 @@
 
 site 'http://community.opscode.com/api/v1'
 
-cookbook "apt", "2.3.4"
-cookbook "etcd",
-	:git => "https://github.com/charliek/etcd-cookbook.git"
-
+cookbook "apt", "2.3.8"
+cookbook "etcd", :git => "https://github.com/charliek/etcd-cookbook.git"
 cookbook "postgresql", "3.3.4"
-
 cookbook "golang"
-
-cookbook "database", "1.6.0"
-
-cookbook "user",
-	:git => "https://github.com/fnichol/chef-user.git"
-
-cookbook "blog",
-  :path => "site-cookbooks/blog"
+cookbook "database", "2.1.6"
+cookbook "user", :git => "https://github.com/fnichol/chef-user.git"
+cookbook "blog", :path => "site-cookbooks/blog"
